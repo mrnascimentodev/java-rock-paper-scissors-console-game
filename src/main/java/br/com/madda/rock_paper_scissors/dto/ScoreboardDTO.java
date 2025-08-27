@@ -9,12 +9,11 @@ public class ScoreboardDTO {
 
   public ScoreboardDTO() {}
 
-  public ScoreboardDTO(String playerName, int victories, int defeats, int draws, int totalGames) {
+  public ScoreboardDTO(String playerName, int victories, int defeats, int draws) {
     this.playerName = playerName;
     this.victories = victories;
     this.defeats = defeats;
     this.draws = draws;
-    this.totalGames = totalGames;
   }
 
   public String getPlayerName() {
