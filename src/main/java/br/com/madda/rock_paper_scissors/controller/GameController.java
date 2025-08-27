@@ -10,14 +10,14 @@ import br.com.madda.rock_paper_scissors.service.MatchService;
 import br.com.madda.rock_paper_scissors.service.PlayerService;
 import br.com.madda.rock_paper_scissors.view.ConsoleView;
 
-public class MatchController {
+public class GameController {
   private final ConsoleView view;
   private final ComputerService computerService;
   private final GameService gameService;
   private final PlayerService playerService;
   private final MatchService matchService;
 
-  public MatchController(ConsoleView view, ComputerService computerService, GameService gameService,
+  public GameController(ConsoleView view, ComputerService computerService, GameService gameService,
       PlayerService playerService, MatchService matchService) {
     this.view = view;
     this.computerService = computerService;
@@ -62,6 +62,8 @@ public class MatchController {
           view.displayError(e.getMessage());
         }
       }
+
+      this.view.showFarewell(this.matchService.getScoreboard(player.getId(), player.getName()));
     } catch (Exception e) {
       this.view.displayError("Internal game error: " + e.getMessage());
       this.view.close();

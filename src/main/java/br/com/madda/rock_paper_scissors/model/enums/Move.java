@@ -1,14 +1,12 @@
 package br.com.madda.rock_paper_scissors.model.enums;
 
 public enum Move {
-  ROCK("Rock", "Scissors"), PAPER("Paper", "Rock"), SCISSOR("Scissor", "Paper");
+  ROCK("Rock"), PAPER("Paper"), SCISSOR("Scissor");
 
   private final String name;
-  private final String win;
 
-  Move(String name, String win) {
+  Move(String name) {
     this.name = name;
-    this.win = win;
   }
 
   public String getName() {
@@ -16,7 +14,16 @@ public enum Move {
   }
 
   public boolean win(Move another) {
-    return this.win.equals(another);
+    switch (this) {
+      case ROCK:
+        return another == SCISSOR;
+      case PAPER:
+        return another == ROCK;
+      case SCISSOR:
+        return another == PAPER;
+      default:
+        return false;
+    }
   }
 
   public static Move fromString(String input) {

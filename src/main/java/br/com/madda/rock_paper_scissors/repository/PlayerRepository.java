@@ -82,7 +82,7 @@ public class PlayerRepository {
   }
 
   public Optional<Player> findByName(String name) throws SQLException {
-    String sql = "SELECT * FROM player WHERE name = ?";
+    String sql = "SELECT * FROM players WHERE name = ?";
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setString(1, name);

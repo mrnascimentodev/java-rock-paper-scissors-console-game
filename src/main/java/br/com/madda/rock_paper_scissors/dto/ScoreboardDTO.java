@@ -5,7 +5,6 @@ public class ScoreboardDTO {
   private int victories;
   private int defeats;
   private int draws;
-  private int totalGames;
 
   public ScoreboardDTO() {}
 
@@ -49,10 +48,6 @@ public class ScoreboardDTO {
   }
 
   public int getTotalGames() {
-    return totalGames;
-  }
-
-  public void setTotalGames(int totalGames) {
-    this.totalGames = totalGames;
+    return this.getVictories() + this.getDefeats() + this.getDraws();
   }
 }
