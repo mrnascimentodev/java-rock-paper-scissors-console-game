@@ -11,10 +11,8 @@ public class Player {
 
   public Player() {}
 
-  public Player(String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
+  public Player(String name) {
     this.name = name;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 
   public Long getId() {
