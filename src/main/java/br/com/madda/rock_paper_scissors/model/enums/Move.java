@@ -6,7 +6,7 @@ public enum Move {
   private final String name;
   private final String win;
 
-  private Move(String name, String win) {
+  Move(String name, String win) {
     this.name = name;
     this.win = win;
   }

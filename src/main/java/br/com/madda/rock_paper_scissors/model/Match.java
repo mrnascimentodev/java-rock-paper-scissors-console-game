@@ -28,6 +28,10 @@ public class Match {
     return id;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   public Long getPlayerId() {
     return playerId;
   }
@@ -62,6 +66,10 @@ public class Match {
 
   public LocalDateTime getCreatedAt() {
     return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   @Override
