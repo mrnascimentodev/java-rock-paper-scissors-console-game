@@ -15,13 +15,12 @@ public class Match {
 
   public Match() {}
 
-  public Match(Long playerId, Move playerMove, Move computerMove, Result result,
-      LocalDateTime createdAt) {
+  public Match(Long playerId, Move playerMove, Move computerMove, Result result) {
     this.playerId = playerId;
     this.playerMove = playerMove;
     this.computerMove = computerMove;
     this.result = result;
-    this.createdAt = createdAt;
+    this.createdAt = LocalDateTime.now();
   }
 
   public Long getId() {

@@ -13,6 +13,8 @@ public class Player {
 
   public Player(String name) {
     this.name = name;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   public Long getId() {
