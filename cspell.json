@@ -5,6 +5,12 @@
   "words": [
     "madda",
     "jdbc",
-    "rockpaperscissors"
+    "rockpaperscissors",
+    "sslmode",
+    "BIGSERIAL",
+    "plpgsql",
+    "tgname",
+    "dotenv",
+    "cdimascio"
   ],
 }

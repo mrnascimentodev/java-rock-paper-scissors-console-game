@@ -2,6 +2,7 @@ package br.com.madda.rock_paper_scissors;
 
 import java.sql.Connection;
 import br.com.madda.rock_paper_scissors.config.DatabaseConfig;
+import br.com.madda.rock_paper_scissors.config.DatabaseConfigFactory;
 import br.com.madda.rock_paper_scissors.controller.GameController;
 import br.com.madda.rock_paper_scissors.mapper.MatchMapper;
 import br.com.madda.rock_paper_scissors.mapper.PlayerMapper;
@@ -16,7 +17,15 @@ import br.com.madda.rock_paper_scissors.view.ConsoleView;
 public class App {
   public static void main(String[] args) {
     try {
-      DatabaseConfig dbConfig = new DatabaseConfig();
+      DatabaseConfig dbConfig = DatabaseConfigFactory.createAuto();
+
+      if (!dbConfig.testConnection()) {
+        System.err.println("❌ Failed to connect to database");
+        return;
+      }
+
+      System.out.println("✅ Connected to: " + dbConfig.getDatabaseType());
+
       Connection connection = dbConfig.getConnection();
 
       PlayerRepository playerRepository = new PlayerRepository(connection);
