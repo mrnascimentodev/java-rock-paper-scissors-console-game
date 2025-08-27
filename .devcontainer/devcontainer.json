@@ -1,0 +1,135 @@
+{
+  "name": "Spring Boot Java 21",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "vscjava.vscode-maven",
+        "vscjava.vscode-gradle",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-json",
+        "streetsidesoftware.code-spell-checker",
+        "pivotal.vscode-spring-boot",
+        "vscjava.vscode-spring-boot-dashboard",
+        "miguelsolorio.symbols"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-21",
+            "path": "/usr/local/openjdk-21"
+          }
+        ],
+        "java.compile.nullAnalysis.mode": "automatic",
+        "java.saveActions.organizeImports": true,
+        "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+        "java.format.settings.profile": "GoogleStyle",
+        "java.codeGeneration.insertionLocation": "afterCursor",
+        "java.codeGeneration.hashCodeEquals.useJava7Objects": true,
+        "java.sources.organizeImports.starThreshold": 99,
+        "java.sources.organizeImports.staticStarThreshold": 99,
+        // Formatação geral
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.formatOnType": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.detectIndentation": false,
+        "workbench.iconTheme": "symbols",
+        // Quebras de linha
+        "files.eol": "\n",
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        // Fonte
+        "editor.fontFamily": "'JetBrains Mono'",
+        "editor.fontWeight": "500",
+        "editor.fontSize": 15,
+        "editor.letterSpacing": -0.2,
+        "editor.lineHeight": 1.25,
+        "editor.fontLigatures": true,
+        // Configurações específicas para Java
+        "[java]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true,
+          "editor.defaultFormatter": "redhat.java"
+        },
+        // XML/POM files
+        "[xml]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true,
+          "editor.defaultFormatter": "redhat.vscode-xml"
+        },
+        // JSON files
+        "[json]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true,
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        // YAML files
+        "[yaml]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true,
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        // Properties files
+        "[properties]": {
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        // Editor visual
+        "editor.rulers": [
+          80,
+          120
+        ],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 120,
+        "editor.renderWhitespace": "boundary",
+        "editor.showFoldingControls": "always",
+        // Workspace
+        "explorer.compactFolders": false,
+        "explorer.confirmDelete": false,
+        "explorer.confirmDragAndDrop": false,
+        "workbench.editor.enablePreview": false,
+        // Git
+        "git.enableSmartCommit": true,
+        "git.confirmSync": false,
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "bash",
+        // Para desenvolvimento Spring Boot
+        "spring-boot.ls.checkforjvmupdates": false,
+        "java.server.launchMode": "Standard",
+        // Para performance
+        "java.maxConcurrentBuilds": 1,
+        "java.import.gradle.offline.enabled": true,
+        // Para debugging
+        "java.debug.settings.hotCodeReplace": "auto",
+        "java.debug.settings.enableRunDebugCodeLens": true,
+        // Para testes
+        "java.test.message.enableShortcut": true,
+        "java.test.editor.enableShortcuts": true,
+        // Specify paths/files to ignore.
+        "cSpell.ignorePaths": [
+          ".git",
+          ".gitignore",
+          ".devcontainer",
+          ".vscode",
+          "out"
+        ]
+      }
+    }
+  },
+  "postCreateCommand": [
+    "git lfs install",
+    "java --version"
+  ],
+  "forwardPorts": [
+    8080,
+    8081
+  ]
+}
