@@ -1,14 +1,15 @@
 package br.com.madda.rock_paper_scissors.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import br.com.madda.rock_paper_scissors.entity.Player;
 
 public class MatchDTO {
   private Long id;
-  private Long playerId;
-  private String playerMove;
-  private String computerMove;
+  private Player player;
+  private String playerPlay;
+  private String computerPlay;
   private String result;
-  private LocalDateTime createdAt;
+  private Instant createdAt;
 
   public MatchDTO() {}
 
@@ -20,28 +21,28 @@ public class MatchDTO {
     this.id = id;
   }
 
-  public Long getPlayerId() {
-    return playerId;
+  public Player getPlayer() {
+    return player;
   }
 
-  public void setPlayerId(Long playerId) {
-    this.playerId = playerId;
+  public void setPlayer(Player player) {
+    this.player = player;
   }
 
-  public String getPlayerMove() {
-    return playerMove;
+  public String getPlayerPlay() {
+    return playerPlay;
   }
 
-  public void setPlayerMove(String playerMove) {
-    this.playerMove = playerMove;
+  public void setPlayerPlay(String playerPlay) {
+    this.playerPlay = playerPlay;
   }
 
-  public String getComputerMove() {
-    return computerMove;
+  public String getComputerPlay() {
+    return computerPlay;
   }
 
-  public void setComputerMove(String computerMove) {
-    this.computerMove = computerMove;
+  public void setComputerPlay(String computerPlay) {
+    this.computerPlay = computerPlay;
   }
 
   public String getResult() {
@@ -52,11 +53,11 @@ public class MatchDTO {
     this.result = result;
   }
 
-  public LocalDateTime getCreatedAt() {
+  public Instant getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
+  public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
   }
 }

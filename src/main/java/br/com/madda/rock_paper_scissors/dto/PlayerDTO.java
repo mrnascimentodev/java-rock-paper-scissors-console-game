@@ -1,16 +1,16 @@
 package br.com.madda.rock_paper_scissors.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class PlayerDTO {
   private Long id;
   private String name;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private Instant createdAt;
+  private Instant updatedAt;
 
   public PlayerDTO() {}
 
-  public PlayerDTO(Long id, String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
+  public PlayerDTO(Long id, String name, Instant createdAt, Instant updatedAt) {
     this.id = id;
     this.name = name;
     this.createdAt = createdAt;
@@ -29,15 +29,15 @@ public class PlayerDTO {
     this.name = name;
   }
 
-  public LocalDateTime getCreatedAt() {
+  public Instant getCreatedAt() {
     return createdAt;
   }
 
-  public LocalDateTime getUpdatedAt() {
+  public Instant getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedAt(LocalDateTime updatedAt) {
+  public void setUpdatedAt(Instant updatedAt) {
     this.updatedAt = updatedAt;
   }
 }

@@ -10,6 +10,12 @@
     "plpgsql",
     "tgname",
     "dotenv",
-    "cdimascio"
-  ],
+    "cdimascio",
+    "flywaydb",
+    "hikaricp",
+    "zaxxer",
+    "codehaus",
+    "hikari",
+    "testdb"
+  ]
 }

@@ -150,7 +150,13 @@ echo "DB_URL=jdbc:postgresql://ep-xxx.us-east-1.aws.neon.tech/neondb" > .env
 echo "DB_USER=seu_usuario" >> .env
 echo "DB_PASSWORD=sua_senha" >> .env
 
-# 2. Executar
+# 2. Migrations
+mvn flyway:clean
+
+export $(grep -v '^#' .env | xargs)
+mvn flyway:migrate -Dflyway.url=$DB_URL -Dflyway.user=$DB_USER -Dflyway.password=$DB_PASSWORD
+
+# 3. Executar
 mvn clean compile exec:java -Dexec.mainClass="br.com.madda.rock_paper_scissors.App"
 ```
 

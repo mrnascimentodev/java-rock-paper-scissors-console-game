@@ -1,4 +1,4 @@
-package br.com.madda.rock_paper_scissors.model;
+package br.com.madda.rock_paper_scissors.entity;
 
 public class Scoreboard {
   private int playerVictories;

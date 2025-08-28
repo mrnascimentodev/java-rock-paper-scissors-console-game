@@ -2,8 +2,8 @@ package br.com.madda.rock_paper_scissors.view;
 
 import java.util.Scanner;
 import br.com.madda.rock_paper_scissors.dto.ScoreboardDTO;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
-import br.com.madda.rock_paper_scissors.model.enums.Result;
+import br.com.madda.rock_paper_scissors.entity.enums.Move;
+import br.com.madda.rock_paper_scissors.entity.enums.Result;
 
 public class ConsoleView {
   private final Scanner scanner;

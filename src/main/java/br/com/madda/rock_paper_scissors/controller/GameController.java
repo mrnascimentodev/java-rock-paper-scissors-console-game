@@ -2,8 +2,10 @@ package br.com.madda.rock_paper_scissors.controller;
 
 import br.com.madda.rock_paper_scissors.dto.PlayerDTO;
 import br.com.madda.rock_paper_scissors.dto.ScoreboardDTO;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
-import br.com.madda.rock_paper_scissors.model.enums.Result;
+import br.com.madda.rock_paper_scissors.entity.Player;
+import br.com.madda.rock_paper_scissors.entity.enums.Move;
+import br.com.madda.rock_paper_scissors.entity.enums.Result;
+import br.com.madda.rock_paper_scissors.mapper.PlayerMapper;
 import br.com.madda.rock_paper_scissors.service.ComputerService;
 import br.com.madda.rock_paper_scissors.service.GameService;
 import br.com.madda.rock_paper_scissors.service.MatchService;
@@ -31,12 +33,13 @@ public class GameController {
       view.welcome();
 
       String playerName = view.getPlayerName();
-      PlayerDTO player = this.playerService.createOrFindPlayer(playerName);
+      PlayerDTO playerDTO = this.playerService.createOrFindPlayer(playerName);
+      PlayerMapper playerMapper = new PlayerMapper();
+    Player player = playerMapper.toEntity(playerDTO);
 
       this.view.displayPlayerMessage(player.getName());
 
-      ScoreboardDTO historicalScoreboard =
-          this.matchService.getScoreboard(player.getId(), player.getName());
+      ScoreboardDTO historicalScoreboard = this.matchService.getScoreboard(player);
       if (historicalScoreboard.getTotalGames() > 0) {
         this.view.displayScoreHistory(historicalScoreboard);
       }
@@ -49,12 +52,12 @@ public class GameController {
           Move computerMove = this.computerService.makeMove();
           Result result = this.gameService.calculateResult(playerMove, computerMove);
 
-          this.matchService.save(player.getId(), playerMove, computerMove, result);
+          this.matchService.save(player, playerMove, computerMove, result);
 
           this.view.displayRoundResult(playerMove, computerMove, result);
 
           ScoreboardDTO updatedScoreboard =
-              this.matchService.getScoreboard(player.getId(), player.getName());
+              this.matchService.getScoreboard(player);
           this.view.displayScoreboard(updatedScoreboard);
 
           continuePlaying = this.view.playAgain();
@@ -63,7 +66,7 @@ public class GameController {
         }
       }
 
-      this.view.showFarewell(this.matchService.getScoreboard(player.getId(), player.getName()));
+      this.view.showFarewell(this.matchService.getScoreboard(player));
     } catch (Exception e) {
       this.view.displayError("Internal game error: " + e.getMessage());
       this.view.close();

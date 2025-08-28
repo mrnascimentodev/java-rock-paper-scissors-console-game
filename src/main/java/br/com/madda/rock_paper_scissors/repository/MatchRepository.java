@@ -1,102 +1,85 @@
 package br.com.madda.rock_paper_scissors.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import br.com.madda.rock_paper_scissors.config.JPAConfig;
 import br.com.madda.rock_paper_scissors.dto.ScoreboardDTO;
-import br.com.madda.rock_paper_scissors.model.Match;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
-import br.com.madda.rock_paper_scissors.model.enums.Result;
+import br.com.madda.rock_paper_scissors.entity.Match;
+import br.com.madda.rock_paper_scissors.entity.Player;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 public class MatchRepository {
-  private final Connection connection;
+  private static final Logger logger = LoggerFactory.getLogger(MatchRepository.class);
 
-  public MatchRepository(Connection connection) {
-    this.connection = connection;
-  }
+  public Match save(Match match) {
+    EntityManager em = JPAConfig.createEntityManager();
 
-  public Match save(Match match) throws SQLException {
-    String sql =
-        "INSERT INTO matches (player_id, player_play, computer_play, result, created_at) VALUES (?, ?, ?, ?, ?)";
+    try {
+      em.getTransaction().begin();
 
-    try (PreparedStatement stmt =
-        connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setLong(1, match.getPlayerId());
-      stmt.setString(2, match.getPlayerMove().name());
-      stmt.setString(3, match.getComputerMove().name());
-      stmt.setString(4, match.getResult().name());
-      stmt.setTimestamp(5, Timestamp.valueOf(match.getCreatedAt()));
-
-      int affectedRows = stmt.executeUpdate();
-
-      if (affectedRows == 0) {
-        throw new SQLException("Failed to insert match");
+      if (match.getId() == null) {
+        em.persist(match);
+      } else {
+        match = em.merge(match);
       }
 
-      try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          match.setId(generatedKeys.getLong(1));
-        }
-      }
+      em.getTransaction().commit();
+      logger.info("Game saved: {}", match.getId());
+
+      return match;
+    } catch (Exception e) {
+      em.getTransaction().rollback();
+      logger.error("Error saving game: {}", e.getMessage(), e);
+      throw new RuntimeException("Error saving game", e);
+    } finally {
+      em.close();
     }
-
-    return match;
   }
 
-  public List<Match> findByPlayer(Long playerId) throws SQLException {
-    String sql = "SELECT * FROM matches WHERE player_id = ? ORDER BY created_at DESC";
-    List<Match> matches = new ArrayList<>();
+  public List<Match> findByPlayer(Player player) throws SQLException {
+    EntityManager em = JPAConfig.createEntityManager();
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setLong(1, playerId);
+    try {
+      TypedQuery<Match> query = em.createQuery(
+          "SELECT m FROM Match m WHERE m.player = :player ORDER BY m.createdAt DESC", Match.class);
+      query.setParameter("player", player);
 
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          matches.add(mapMatch(rs));
-        }
-      }
+      return query.getResultList();
+    } catch (Exception e) {
+      logger.error("Error fetching player matches: {}", e.getMessage(), e);
+      return List.of();
+    } finally {
+      em.close();
     }
-
-    return matches;
   }
 
-  public ScoreboardDTO getScoreboardByPlayer(Long playerId, String playerName) throws SQLException {
-    String sql = """
-            SELECT
-                COUNT(CASE WHEN result = 'VICTORY' THEN 1 END) as victories,
-                COUNT(CASE WHEN result = 'DEFEAT' THEN 1 END) as defeats,
-                COUNT(CASE WHEN result = 'TIE' THEN 1 END) as draws
-            FROM matches
-            WHERE player_id = ?
-        """;
+  public ScoreboardDTO getScoreboardByPlayer(Player player) {
+    EntityManager em = JPAConfig.createEntityManager();
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setLong(1, playerId);
+    try {
+      Object[] result = (Object[]) em.createQuery("""
+              SELECT
+                  SUM(CASE WHEN m.result = 'VICTORY' THEN 1 ELSE 0 END),
+                  SUM(CASE WHEN m.result = 'DEFEAT' THEN 1 ELSE 0 END),
+                  SUM(CASE WHEN m.result = 'TIE' THEN 1 ELSE 0 END)
+              FROM Match m
+              WHERE m.player = :player
+          """).setParameter("player", player).getSingleResult();
 
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          return new ScoreboardDTO(playerName, rs.getInt("victories"), rs.getInt("defeats"),
-              rs.getInt("draws"));
-        }
-      }
+      int victories = result[0] != null ? ((Number) result[0]).intValue() : 0;
+      int defeats = result[1] != null ? ((Number) result[1]).intValue() : 0;
+      int draws = result[2] != null ? ((Number) result[2]).intValue() : 0;
+
+      return new ScoreboardDTO(player.getName(), victories, defeats, draws);
+    } catch (Exception e) {
+      logger.error("Error fetching player matches: {}", e.getMessage(), e);
+      throw new RuntimeException("Error fetching matches", e);
+    } finally {
+      em.close();
     }
-
-    return new ScoreboardDTO(playerName, 0, 0, 0);
   }
 
-  private Match mapMatch(ResultSet rs) throws SQLException {
-    Match match = new Match();
-    match.setId(rs.getLong("id"));
-    match.setPlayerId(rs.getLong("player_id"));
-    match.setPlayerMove(Move.fromString(rs.getString("player_play")));
-    match.setComputerMove(Move.fromString(rs.getString("computer_play")));
-    match.setResult(Result.valueOf(rs.getString("result")));
-    match.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-    return match;
-  }
 }
