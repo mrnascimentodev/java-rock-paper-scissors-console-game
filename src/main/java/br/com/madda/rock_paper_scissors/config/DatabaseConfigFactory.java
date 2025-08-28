@@ -1,5 +1,7 @@
 package br.com.madda.rock_paper_scissors.config;
 
+import br.com.madda.rock_paper_scissors.config.impl.H2DatabaseConfig;
+import br.com.madda.rock_paper_scissors.config.impl.PostgreSQLDatabaseConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class DatabaseConfigFactory {

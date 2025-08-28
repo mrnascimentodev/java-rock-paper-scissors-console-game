@@ -94,7 +94,6 @@ public class ConsoleView {
     System.out.println("=================================");
     System.out.println("         END OF THE GAME!");
     System.out.println("=================================");
-    displayScoreboard(scoreboard);
 
     if (scoreboard.getTotalGames() > 0) {
       System.out.println("--- FINAL STATISTICS ---");

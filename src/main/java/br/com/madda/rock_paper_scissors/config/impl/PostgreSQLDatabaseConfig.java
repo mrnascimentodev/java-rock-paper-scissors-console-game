@@ -1,10 +1,11 @@
-package br.com.madda.rock_paper_scissors.config;
+package br.com.madda.rock_paper_scissors.config.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import br.com.madda.rock_paper_scissors.config.DatabaseConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class PostgreSQLDatabaseConfig implements DatabaseConfig {

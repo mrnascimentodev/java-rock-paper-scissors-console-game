@@ -1,9 +1,10 @@
-package br.com.madda.rock_paper_scissors.config;
+package br.com.madda.rock_paper_scissors.config.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import br.com.madda.rock_paper_scissors.config.DatabaseConfig;
 
 public class H2DatabaseConfig implements DatabaseConfig {
   private static final String DB_URL = "jdbc:h2:mem:rockpaperscissors;DB_CLOSE_DELAY=-1";
