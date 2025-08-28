@@ -1,123 +1,91 @@
 package br.com.madda.rock_paper_scissors.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import br.com.madda.rock_paper_scissors.model.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import br.com.madda.rock_paper_scissors.config.JPAConfig;
+import br.com.madda.rock_paper_scissors.entity.Player;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 public class PlayerRepository {
-  private final Connection connection;
+  private static final Logger logger = LoggerFactory.getLogger(PlayerRepository.class);
 
-  public PlayerRepository(Connection connection) {
-    this.connection = connection;
-  }
+  public Player save(Player player) {
+    EntityManager em = JPAConfig.createEntityManager();
 
-  public Player save(Player player) throws SQLException {
-    if (player.getId() == null) {
-      return insert(player);
-    }
+    try {
+      em.getTransaction().begin();
 
-    return update(player);
-  }
-
-  private Player insert(Player player) throws SQLException {
-    String sql = "INSERT INTO players (name, created_at, updated_at) VALUES (?, ?, ?)";
-
-    try (PreparedStatement stmt =
-        connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setString(1, player.getName());
-      stmt.setTimestamp(2, Timestamp.valueOf(player.getCreatedAt()));
-      stmt.setTimestamp(3, Timestamp.valueOf(player.getUpdatedAt()));
-
-      int affectedRows = stmt.executeUpdate();
-
-      if (affectedRows == 0) {
-        throw new SQLException("Failed to insert player");
+      if (player.getId() == null) {
+        em.persist(player);
+      } else {
+        player = em.merge(player);
       }
 
-      try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          player.setId(generatedKeys.getLong(1));
-        }
-      }
-    }
+      em.getTransaction().commit();
+      logger.info("Player saved: {}", player.getName());
 
-    return player;
+      return player;
+    } catch (Exception e) {
+      em.getTransaction().rollback();
+      logger.error("Error saving player: {}", e.getMessage(), e);
+      throw new RuntimeException("Error saving player", e);
+    } finally {
+      em.close();
+    }
   }
 
-  private Player update(Player player) throws SQLException {
-    String sql = "UPDATE players SET name = ?, updated_at = ? WHERE id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, player.getName());
-      stmt.setTimestamp(2, Timestamp.valueOf(player.getUpdatedAt()));
-      stmt.setLong(3, player.getId());
-
-      stmt.executeUpdate();
-    }
-
-    return player;
-  }
 
   public Optional<Player> findById(Long id) throws SQLException {
-    String sql = "SELECT * FROM players WHERE id = ?";
+    EntityManager em = JPAConfig.createEntityManager();
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setLong(1, id);
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          return Optional.of(mapPlayer(rs));
-        }
-      }
+    try {
+      Player player = em.find(Player.class, id);
+      return Optional.ofNullable(player);
+    } catch (Exception e) {
+      logger.error("Error searching for player by ID: {}", e.getMessage(), e);
+      return Optional.empty();
+    } finally {
+      em.close();
     }
-
-    return Optional.empty();
   }
 
   public Optional<Player> findByName(String name) throws SQLException {
-    String sql = "SELECT * FROM players WHERE name = ?";
+    EntityManager em = JPAConfig.createEntityManager();
+    try {
+      TypedQuery<Player> query =
+          em.createQuery("SELECT p FROM Player p WHERE p.name = :name", Player.class);
+      query.setParameter("name", name);
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, name);
+      Player player = query.getSingleResult();
 
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          return Optional.of(mapPlayer(rs));
-        }
-      }
+      return Optional.of(player);
+    } catch (NoResultException e) {
+      return Optional.empty();
+    } catch (Exception e) {
+      logger.error("Error searching for player by name: {}", e.getMessage(), e);
+      return Optional.empty();
+    } finally {
+      em.close();
     }
-
-    return Optional.empty();
   }
 
   public List<Player> findAll() throws SQLException {
-    String sql = "SELECT * FROM players ORDER BY name";
-    List<Player> players = new ArrayList<>();
+    EntityManager em = JPAConfig.createEntityManager();
+    try {
+      TypedQuery<Player> query =
+          em.createQuery("SELECT p FROM Player p ORDER BY p.createdAt DESC", Player.class);
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery()) {
-
-      while (rs.next()) {
-        players.add(mapPlayer(rs));
-      }
+          return query.getResultList();
+    } catch (Exception e) {
+      logger.error("Error listing players: {}", e.getMessage(), e);
+      return List.of();
+    } finally {
+      em.close();
     }
-
-    return players;
-  }
-
-  private Player mapPlayer(ResultSet rs) throws SQLException {
-    Player player = new Player();
-    player.setId(rs.getLong("id"));
-    player.setName(rs.getString("name"));
-    player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-    player.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-    return player;
   }
 }

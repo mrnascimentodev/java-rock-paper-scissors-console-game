@@ -1,21 +1,21 @@
 package br.com.madda.rock_paper_scissors.mapper;
 
 import br.com.madda.rock_paper_scissors.dto.MatchDTO;
-import br.com.madda.rock_paper_scissors.model.Match;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
-import br.com.madda.rock_paper_scissors.model.enums.Result;
+import br.com.madda.rock_paper_scissors.entity.Match;
+import br.com.madda.rock_paper_scissors.entity.enums.Move;
+import br.com.madda.rock_paper_scissors.entity.enums.Result;
 
 public class MatchMapper {
-  public MatchDTO toDto(Match match) {
+  public MatchDTO toDTO(Match match) {
     if (match == null) {
       return null;
     }
 
     MatchDTO dto = new MatchDTO();
     dto.setId(match.getId());
-    dto.setPlayerId(match.getPlayerId());
-    dto.setPlayerMove(match.getPlayerMove().name());
-    dto.setComputerMove(match.getComputerMove().name());
+    dto.setPlayer(match.getPlayer());
+    dto.setPlayerPlay(match.getPlayerPlay().name());
+    dto.setComputerPlay(match.getComputerPlay().name());
     dto.setResult(match.getResult().name());
     dto.setCreatedAt(match.getCreatedAt());
 
@@ -29,9 +29,9 @@ public class MatchMapper {
 
     Match match = new Match();
     match.setId(dto.getId());
-    match.setPlayerId(dto.getPlayerId());
-    match.setPlayerMove(Move.fromString(dto.getPlayerMove()));
-    match.setComputerMove(Move.fromString(dto.getComputerMove()));
+    match.setPlayer(dto.getPlayer());
+    match.setPlayerPlay(Move.fromString(dto.getPlayerPlay()));
+    match.setComputerPlay(Move.fromString(dto.getComputerPlay()));
     match.setResult(Result.valueOf(dto.getResult()));
     match.setCreatedAt(dto.getCreatedAt());
 

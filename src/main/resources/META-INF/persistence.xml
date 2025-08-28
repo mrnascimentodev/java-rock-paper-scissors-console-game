@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+  version="3.0">
+
+  <!-- Persistence Unit for H2 (Development) -->
+  <persistence-unit name="h2-unit" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+    <!-- Entities -->
+    <class>br.com.madda.rock_paper_scissors.entity.Player</class>
+    <class>br.com.madda.rock_paper_scissors.entity.Match</class>
+
+    <properties>
+      <!-- H2 Connection Settings -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver" />
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1" />
+      <property name="jakarta.persistence.jdbc.user" value="sa" />
+      <property name="jakarta.persistence.jdbc.password" value="" />
+
+      <!-- Hibernate Settings -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+      <property name="hibernate.hbm2ddl.auto" value="validate" />
+      <property name="hibernate.show_sql" value="false" />
+      <property name="hibernate.format_sql" value="true" />
+      <property name="hibernate.highlight_sql" value="true" />
+
+      <!-- Connection Pool (HikariCP) -->
+      <property name="hibernate.connection.provider_class"
+        value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property name="hibernate.hikari.minimumIdle" value="5" />
+      <property name="hibernate.hikari.maximumPoolSize" value="10" />
+      <property name="hibernate.hikari.idleTimeout" value="300000" />
+
+      <!-- Performance -->
+      <property name="hibernate.jdbc.batch_size" value="25" />
+      <property name="hibernate.order_inserts" value="true" />
+      <property name="hibernate.order_updates" value="true" />
+      <property name="hibernate.jdbc.batch_versioned_data" value="true" />
+    </properties>
+  </persistence-unit>
+
+  <!-- Persistence Unit for PostgreSQL (Production) -->
+  <persistence-unit name="postgresql-unit" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+    <!-- Entities -->
+    <class>br.com.madda.rock_paper_scissors.entity.Player</class>
+    <class>br.com.madda.rock_paper_scissors.entity.Match</class>
+
+    <properties>
+      <!-- PostgreSQL Connection Settings (via environment variables) -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
+
+      <!-- Hibernate Settings -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+      <property name="hibernate.hbm2ddl.auto" value="validate" />
+      <property name="hibernate.show_sql" value="false" />
+      <property name="hibernate.format_sql" value="true" />
+
+      <!-- Connection Pool (HikariCP) -->
+      <property name="hibernate.connection.provider_class"
+        value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property name="hibernate.hikari.minimumIdle" value="5" />
+      <property name="hibernate.hikari.maximumPoolSize" value="20" />
+      <property name="hibernate.hikari.idleTimeout" value="300000" />
+      <property name="hibernate.hikari.connectionTimeout" value="30000" />
+      <property name="hibernate.hikari.leakDetectionThreshold" value="60000" />
+
+      <!-- Performance -->
+      <property name="hibernate.jdbc.batch_size" value="25" />
+      <property name="hibernate.order_inserts" value="true" />
+      <property name="hibernate.order_updates" value="true" />
+      <property name="hibernate.jdbc.batch_versioned_data" value="true" />
+
+      <!-- Second-level cache (optional) -->
+      <property name="hibernate.cache.use_second_level_cache" value="false" />
+      <property name="hibernate.cache.use_query_cache" value="false" />
+    </properties>
+  </persistence-unit>
+</persistence>

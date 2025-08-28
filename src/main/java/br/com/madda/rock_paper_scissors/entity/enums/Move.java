@@ -1,7 +1,7 @@
-package br.com.madda.rock_paper_scissors.model.enums;
+package br.com.madda.rock_paper_scissors.entity.enums;
 
 public enum Move {
-  ROCK("Rock"), PAPER("Paper"), SCISSOR("Scissor");
+ROCK("Rock"), PAPER("Paper"), SCISSOR("Scissor");
 
   private final String name;
 

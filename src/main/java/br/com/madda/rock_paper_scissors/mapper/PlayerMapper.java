@@ -1,10 +1,10 @@
 package br.com.madda.rock_paper_scissors.mapper;
 
 import br.com.madda.rock_paper_scissors.dto.PlayerDTO;
-import br.com.madda.rock_paper_scissors.model.Player;
+import br.com.madda.rock_paper_scissors.entity.Player;
 
 public class PlayerMapper {
-  public PlayerDTO toDto(Player player) {
+  public PlayerDTO toDTO(Player player) {
     if (player == null) {
       return null;
     }

@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import br.com.madda.rock_paper_scissors.dto.MatchDTO;
 import br.com.madda.rock_paper_scissors.dto.ScoreboardDTO;
+import br.com.madda.rock_paper_scissors.entity.Match;
+import br.com.madda.rock_paper_scissors.entity.Player;
+import br.com.madda.rock_paper_scissors.entity.enums.Move;
+import br.com.madda.rock_paper_scissors.entity.enums.Result;
 import br.com.madda.rock_paper_scissors.mapper.MatchMapper;
-import br.com.madda.rock_paper_scissors.model.Match;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
-import br.com.madda.rock_paper_scissors.model.enums.Result;
 import br.com.madda.rock_paper_scissors.repository.MatchRepository;
 
 public class MatchService {
@@ -20,20 +21,19 @@ public class MatchService {
     this.mapper = mapper;
   }
 
-  public MatchDTO save(Long playerId, Move playerMove, Move computerMove, Result result)
+  public MatchDTO save(Player player, Move playerMove, Move computerMove, Result result)
       throws SQLException {
-    Match match = new Match(playerId, playerMove, computerMove, result);
+    Match match = new Match(player, playerMove, computerMove, result);
     Match matchSaved = repository.save(match);
 
-    return mapper.toDto(matchSaved);
+    return mapper.toDTO(matchSaved);
   }
 
-  public List<MatchDTO> findMatches(Long playerId) throws SQLException {
-    return repository.findByPlayer(playerId).stream().map(mapper::toDto)
-        .collect(Collectors.toList());
+  public List<MatchDTO> findMatches(Player player) throws SQLException {
+    return repository.findByPlayer(player).stream().map(mapper::toDTO).collect(Collectors.toList());
   }
 
-  public ScoreboardDTO getScoreboard(Long playerId, String playerName) throws SQLException {
-    return repository.getScoreboardByPlayer(playerId, playerName);
+  public ScoreboardDTO getScoreboard(Player player) throws SQLException {
+    return repository.getScoreboardByPlayer(player);
   }
 }

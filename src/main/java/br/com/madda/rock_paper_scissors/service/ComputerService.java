@@ -1,7 +1,7 @@
 package br.com.madda.rock_paper_scissors.service;
 
 import java.util.Random;
-import br.com.madda.rock_paper_scissors.model.enums.Move;
+import br.com.madda.rock_paper_scissors.entity.enums.Move;
 
 public class ComputerService {
   private final Random random;
