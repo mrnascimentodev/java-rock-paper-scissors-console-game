@@ -76,12 +76,8 @@ graph TB
 
 ```
 src/main/java/br/com/madda/rock_paper_scissors/
-├── 📁 config/                      # Configurações de banco
-│   ├── DatabaseConfig.java         # Interface principal
-│   ├── DatabaseConfigFactory.java  # Factory pattern
-│   └── impl/
-│       ├── H2DatabaseConfig.java
-│       └── PostgreSQLDatabaseConfig.java
+├── 📁 config/                  # Configurações de banco
+│   ├── JpaConfig.java          # Interface principal
 ├── 📁 controller/              # Controladores (MVC)
 │   └── GameController.java
 ├── 📁 dto/                     # Data Transfer Objects
@@ -91,7 +87,7 @@ src/main/java/br/com/madda/rock_paper_scissors/
 ├── 📁 mapper/                  # Conversores Entity ↔ DTO
 │   ├── MatchMapper.java
 │   └── PlayerMapper.java
-├── 📁 model/                   # Entidades de domínio
+├── 📁 entity/                # Entidades de domínio
 │   ├── Match.java
 │   ├── Player.java
 │   ├── Scoreboard.java
@@ -119,6 +115,8 @@ src/main/java/br/com/madda/rock_paper_scissors/
 | **Maven** | 3.8+ | Gerenciamento de dependências |
 | **H2 Database** | 2.3.232 | Banco em memória (desenvolvimento) |
 | **PostgreSQL** | 42.7.7 | Banco de produção (Neon Cloud) |
+| **Hibernate** | 6.4.4.Final | ORM |
+| **Flyway** | 10.8.1 | Gerenciamento e controle de migrações |
 | **dotenv-java** | 3.2.0 | Gerenciamento de variáveis ambiente |
 | **SLF4J** | 2.0.17 | Sistema de logging |
 
@@ -285,8 +283,9 @@ public enum Move {
 
 #### Factory Pattern
 ```java
-public class DatabaseConfigFactory {
-    public static DatabaseConfig createAuto() {
+public class JPAConfig {
+    private static EntityManagerFactory createEntityManagerFactory() {
+        String persistenceUnit = isPostgreSQL() ? "postgresql-unit" : "h2-unit";
         // Detecção automática H2 vs PostgreSQL
     }
 }
@@ -309,13 +308,20 @@ public class DatabaseConfigFactory {
 
 ### Variáveis de Ambiente
 ```bash
-# PostgreSQL Neon
+# Database Settings
+# For PostgreSQL (Neon, AWS RDS, etc.)
 DB_URL=jdbc:postgresql://host/database
 DB_USER=username
 DB_PASSWORD=password
 
-# Logging (opcional)
-LOGGING_LEVEL=DEBUG
+# Optional configurations
+LOGGING_LEVEL=INFO
+JPA_SHOW_SQL=false
+HIKARI_MAX_POOL_SIZE=10
+
+# Flyway settings
+FLYWAY_BASELINE_ON_MIGRATE=true
+FLYWAY_VALIDATE_ON_MIGRATE=true
 ```
 
 ### Maven Profiles
@@ -369,7 +375,7 @@ mvn jacoco:report
 ## 🚦 Próximos Passos
 
 ### Melhorias Planejadas
-- [ ] JPA
+- [X] Implements JPA and Flyway
 - [ ] Testes completos
 - [ ] CI/CD pipeline
 - [ ] Diferentes níveis de dificuldade da IA
