@@ -50,25 +50,22 @@ graph TB
     end
 
     subgraph "Database Implementations"
-        G --> I[DatabaseConfig Interface]
+        G --> I[JpaConfig]
         H --> I
-        I --> J[DatabaseConfigFactory]
-        J --> K[H2DatabaseConfig]
-        J --> L[PostgreSQLDatabaseConfig]
     end
 
     subgraph "Model Layer"
-        M[Player]
-        N[Match]
-        O[Scoreboard]
-        P[Move Enum]
-        Q[Result Enum]
+        J[Player]
+        K[Match]
+        L[Scoreboard]
+        M[Move Enum]
+        N[Result Enum]
     end
 
     subgraph "DTO Layer"
-        R[MatchDTO]
-        S[PlayerDTO]
-        T[ScoreboardDTO]
+        O[MatchDTO]
+        P[PlayerDTO]
+        Q[ScoreboardDTO]
     end
 ```
 
@@ -77,7 +74,7 @@ graph TB
 ```
 src/main/java/br/com/madda/rock_paper_scissors/
 ├── 📁 config/                  # Configurações de banco
-│   ├── JpaConfig.java          # Interface principal
+│   ├── JpaConfig.java
 ├── 📁 controller/              # Controladores (MVC)
 │   └── GameController.java
 ├── 📁 dto/                     # Data Transfer Objects
